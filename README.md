@@ -1,6 +1,7 @@
 # Torrent-Client
 
 ## Code Structure
+
 - `/core` - TorrentManager, TorrentFile, Observer
 - `/fileio` - FileManager
 - `/parser` - BencodeParser
@@ -8,3 +9,4 @@
 - `/pieces` - PieceManager, PieceSelectionStrategy
 - `/tracker` - FileManager
 - `/ui` - CLI, Logger
+- `/data-structures` - implementation of String, Vector and HashMap
