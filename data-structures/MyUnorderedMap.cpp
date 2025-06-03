@@ -147,6 +147,27 @@ const Value &MyUnorderedMap<Key, Value>::at(const Key &key) const
 }
 
 template <typename Key, typename Value>
+const typename MyUnorderedMap<Key, Value>::Entry &MyUnorderedMap<Key, Value>::operator[](size_t index) const
+{
+    size_t count = 0;
+
+    for (size_t i = 0; i < buckets.getSize(); ++i)
+    {
+        for (size_t j = 0; j < buckets[i].getSize(); ++j)
+        {
+            if (count == index)
+            {
+                return buckets[i][j];
+            }
+
+            ++count;
+        }
+    }
+
+    throw std::out_of_range("Index out of bounds in MyUnorderedMap");
+}
+
+template <typename Key, typename Value>
 size_t MyUnorderedMap<Key, Value>::getSize() const
 {
     return size;

@@ -6,6 +6,12 @@ template <typename Key, typename Value>
 class MyUnorderedMap
 {
 public:
+    struct Entry
+    {
+        Key key;
+        Value value;
+    };
+
     MyUnorderedMap();
     MyUnorderedMap(const MyUnorderedMap &other);
     MyUnorderedMap(MyUnorderedMap &&other) noexcept;
@@ -21,16 +27,12 @@ public:
     Value &operator[](const Key &key);
     const Value &at(const Key &key) const;
 
+    const Entry &operator[](size_t index) const;
+
     size_t getSize() const;
     void clear();
 
 private:
-    struct Entry
-    {
-        Key key;
-        Value value;
-    };
-
     MyVector<MyVector<Entry>> buckets;
     size_t size;
     size_t capacity;
