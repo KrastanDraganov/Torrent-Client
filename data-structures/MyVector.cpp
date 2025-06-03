@@ -178,4 +178,5 @@ void MyVector<T>::free()
 
 // TO DO - revise if needed
 template class MyVector<int>;
+template class MyVector<size_t>;
 template class MyVector<MyString>;
