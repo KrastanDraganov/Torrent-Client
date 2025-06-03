@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Block.h"
-#include "../data-structures/MyVector.h"
+#include "../data-structures/MyVector.hpp"
 #include "../data-structures/MyString.h"
 
 class Piece

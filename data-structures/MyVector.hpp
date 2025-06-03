@@ -1,10 +1,58 @@
-#include <stdexcept>
+#pragma once
 
-#include "MyVector.h"
-#include "MyString.h"
+#include <iostream>
+
+template <typename T>
+class MyVector
+{
+public:
+    MyVector();
+    MyVector(size_t initialCapacity);
+
+    MyVector(const MyVector &other);
+    MyVector(MyVector &&other) noexcept;
+
+    MyVector &operator=(const MyVector &other);
+    MyVector &operator=(MyVector &&other) noexcept;
+
+    ~MyVector();
+
+    void push_back(const T &value);
+    void pop_back();
+
+    size_t getSize() const;
+    size_t getCapacity() const;
+
+    bool isEmpty() const;
+
+    T &operator[](size_t index);
+    const T &operator[](size_t index) const;
+
+    void clear();
+
+private:
+    void resize(size_t newCapacity);
+
+    void copyFrom(const MyVector &other);
+    void moveFrom(MyVector &&other);
+
+    void free();
+
+    T *data;
+
+    size_t size;
+    size_t capacity;
+};
 
 template <typename T>
 MyVector<T>::MyVector() : data(nullptr), size(0), capacity(0) {}
+
+template <typename T>
+MyVector<T>::MyVector(size_t initialCapacity)
+    : size(0), capacity(initialCapacity)
+{
+    data = new T[capacity]();
+}
 
 template <typename T>
 MyVector<T>::MyVector(const MyVector &other) : size(other.size), capacity(other.capacity)
@@ -175,9 +223,3 @@ void MyVector<T>::free()
     size = 0;
     capacity = 0;
 }
-
-// TO DO - revise if needed
-template class MyVector<int>;
-template class MyVector<size_t>;
-template class MyVector<unsigned char>;
-template class MyVector<MyString>;

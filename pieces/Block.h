@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../data-structures/MyVector.h"
+#include "../data-structures/MyVector.hpp"
 
 class Block
 {
 public:
+    Block();
+
     Block(int offset, const MyVector<unsigned char> &data);
 
     int getOffset() const;

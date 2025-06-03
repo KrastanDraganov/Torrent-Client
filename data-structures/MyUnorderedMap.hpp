@@ -1,7 +1,54 @@
-#include "MyUnorderedMap.h"
-#include "MyString.h"
+#pragma once
 
+#include "MyVector.hpp"
+
+#include <iostream>
 #include <stdexcept>
+
+template <typename Key, typename Value>
+class MyUnorderedMap
+{
+public:
+    struct Entry
+    {
+        Key key;
+        Value value;
+    };
+
+    MyUnorderedMap();
+    MyUnorderedMap(const MyUnorderedMap &other);
+    MyUnorderedMap(MyUnorderedMap &&other) noexcept;
+
+    MyUnorderedMap &operator=(const MyUnorderedMap &other);
+    MyUnorderedMap &operator=(MyUnorderedMap &&other) noexcept;
+
+    ~MyUnorderedMap();
+
+    void insert(const Key &key, const Value &value);
+    bool contains(const Key &key) const;
+
+    Value &operator[](const Key &key);
+    const Value &at(const Key &key) const;
+
+    const Entry &operator[](size_t index) const;
+
+    size_t getSize() const;
+    void clear();
+
+private:
+    MyVector<MyVector<Entry>> buckets;
+    size_t size;
+    size_t capacity;
+
+    size_t hash(const Key &key) const;
+    void rehash();
+
+    void copyFrom(const MyUnorderedMap &other);
+    void moveFrom(MyUnorderedMap &&other);
+
+    static constexpr double loadFactorThreshold = 0.75;
+    static constexpr size_t initialCapacity = 16;
+};
 
 template <typename Key, typename Value>
 MyUnorderedMap<Key, Value>::MyUnorderedMap()
@@ -186,7 +233,7 @@ size_t MyUnorderedMap<Key, Value>::hash(const Key &key) const
     size_t hashVal = 0;
     const char *str = key.c_str();
 
-    for (size_t i = 0; i < key.length(); ++i)
+    for (size_t i = 0; i < key.getSize(); ++i)
     {
         hashVal = 31 * hashVal + str[i];
     }

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../data-structures/MyString.h"
-#include "../data-structures/MyVector.h"
-#include "../data-structures/MyUnorderedMap.h"
+#include "../data-structures/MyVector.hpp"
+#include "../data-structures/MyUnorderedMap.hpp"
 
 enum class BencodeType
 {

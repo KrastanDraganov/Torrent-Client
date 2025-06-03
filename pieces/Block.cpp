@@ -1,5 +1,7 @@
 #include "Block.h"
 
+Block::Block() : offset(0), data(MyVector<unsigned char>()) {}
+
 Block::Block(int offset, const MyVector<unsigned char> &data)
 {
     this->offset = offset;
