@@ -125,6 +125,21 @@ MyString &MyString::operator+=(const MyString &other)
     return *this;
 }
 
+MyString &MyString::operator+=(char character)
+{
+    if (getSize() + +1 > allocatedDataSize)
+    {
+        resize(dataToAllocByStringLen(getSize() + 1));
+    }
+
+    data[size] = character;
+
+    ++size;
+    data[size] = '\n';
+
+    return *this;
+}
+
 char &MyString::operator[](size_t index)
 {
     return data[index];
