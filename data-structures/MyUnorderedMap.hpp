@@ -28,6 +28,7 @@ public:
     bool contains(const Key &key) const;
 
     Value &operator[](const Key &key);
+    const Value &operator[](const Key &key) const;
     const Value &at(const Key &key) const;
 
     const Entry &operator[](size_t index) const;
@@ -175,6 +176,22 @@ Value &MyUnorderedMap<Key, Value>::operator[](const Key &key)
     target = hash(key) % capacity;
 
     return buckets[target][buckets[target].getSize() - 1].value;
+}
+
+template <typename Key, typename Value>
+const Value &MyUnorderedMap<Key, Value>::operator[](const Key &key) const
+{
+    size_t target = hash(key) % capacity;
+
+    for (size_t i = 0; i < buckets[target].getSize(); ++i)
+    {
+        if (buckets[target][i].key == key)
+        {
+            return buckets[target][i].value;
+        }
+    }
+
+    throw std::out_of_range("Key not found in const operator[]");
 }
 
 template <typename Key, typename Value>
