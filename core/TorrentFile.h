@@ -3,28 +3,44 @@
 #include "../data-structures/MyString.h"
 #include "../data-structures/MyVector.hpp"
 
+#include "../parser/BencodeValue.h"
+#include "../parser/BencodeParser.h"
+
+struct FileEntry
+{
+    MyString path;
+    long long size;
+};
+
 class TorrentFile
 {
 public:
-    void setName(const MyString &name);
+    TorrentFile(const MyString &filePath);
+
+    int getPieceLength() const;
+    long long getTotalSize() const;
+
+    const MyString &getAnnounce() const;
     const MyString &getName() const;
 
-    void setPieceLength(int pieceLength);
-    int getPieceLength() const;
-
-    void addPieceHash(const MyString &hash);
-    const MyVector<MyString> &getPieceHashes() const;
-
-    void addFile(const MyString &path, size_t size);
-    const MyVector<MyString> &getFilePaths() const;
-    const MyVector<size_t> &getFileSizes() const;
+    const MyVector<FileEntry> &getFiles() const;
+    const MyVector<MyString> &getPieces() const;
 
 private:
+    int pieceLength;
+    long long totalSize;
+
+    MyString announce;
     MyString name;
 
-    int pieceLength = 0;
-    MyVector<MyString> pieceHashes;
+    MyVector<FileEntry> files;
+    MyVector<MyString> pieces;
 
-    MyVector<MyString> filePaths;
-    MyVector<size_t> fileSizes;
+    void parseRoot(const BencodeValue &root);
+    void parseInfo(const BencodeValue &infoDict);
+    void parseSingleFile(const MyUnorderedMap<MyString, BencodeValue> &infoDict);
+    void parseMultiFile(const MyUnorderedMap<MyString, BencodeValue> &infoDict);
+    void splitPieces(const MyString &piecesRaw);
+
+    MyString readFileContent(const MyString &filePath) const;
 };
