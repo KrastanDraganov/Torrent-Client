@@ -122,11 +122,21 @@ BencodeValue BencodeParser::parseDict()
 
 char BencodeParser::peek() const
 {
+    if (position >= input.getSize())
+    {
+        throw std::out_of_range("Parsing failed: position out of bounds");
+    }
+
     return input[position];
 }
 
 char BencodeParser::next()
 {
+    if (position >= input.getSize())
+    {
+        throw std::out_of_range("Parsing failed: position out of bounds");
+    }
+
     return input[position++];
 }
 
