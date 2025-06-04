@@ -7,6 +7,7 @@ class MyString
 public:
     MyString();
     MyString(const char *data);
+    explicit MyString(size_t stringLength);
 
     MyString(const MyString &other);
     MyString(MyString &&other) noexcept;
@@ -33,8 +34,6 @@ public:
     MyString substr(size_t begin, size_t howMany) const;
 
 private:
-    explicit MyString(size_t stringLength);
-
     void copyFrom(const MyString &other);
     void moveFrom(MyString &&other);
 
