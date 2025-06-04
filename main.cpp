@@ -1,189 +1,45 @@
-#include "data-structures/MyString.h"
-#include "parser/BencodeParser.h"
+#include "core/TorrentFile.h"
+
 #include <iostream>
 
-void printValue(const BencodeValue &value, int indent = 0)
+void printTorrentInfo(const TorrentFile &torrent)
 {
-    BencodeType type = value.getType();
+    std::cout << "Announce: " << torrent.getAnnounce().c_str() << '\n';
+    std::cout << "Name: " << torrent.getName().c_str() << '\n';
+    std::cout << "Total Size: " << torrent.getTotalSize() << " bytes\n";
+    std::cout << "Piece Length: " << torrent.getPieceLength() << " bytes\n";
 
-    switch (type)
+    const MyVector<MyString> &pieces = torrent.getPieces();
+    std::cout << "Number of Pieces: " << pieces.getSize() << '\n';
+
+    const MyVector<FileEntry> &files = torrent.getFiles();
+
+    std::cout << "Files:\n";
+
+    for (size_t i = 0; i < files.getSize(); ++i)
     {
-    case BencodeType::Integer:
-    {
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "int: " << value.asInt() << std::endl;
-
-        break;
-    }
-    case BencodeType::String:
-    {
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "string: " << value.asString().c_str() << std::endl;
-
-        break;
-    }
-    case BencodeType::List:
-    {
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "list: [" << std::endl;
-        const MyVector<BencodeValue> &list = value.asList();
-
-        for (size_t i = 0; i < list.getSize(); ++i)
-        {
-            printValue(list[i], indent + 2);
-        }
-
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "]" << std::endl;
-
-        break;
-    }
-    case BencodeType::Dictionary:
-    {
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "dict: {" << std::endl;
-
-        const MyUnorderedMap<MyString, BencodeValue> &dict = value.asDict();
-
-        for (size_t i = 0; i < dict.getSize(); ++i)
-        {
-            const auto &entry = dict[i];
-
-            for (int j = 0; j < indent + 2; ++j)
-            {
-                std::cout << ' ';
-            }
-
-            std::cout << entry.key.c_str() << ": ";
-
-            const BencodeValue &val = entry.value;
-
-            switch (val.getType())
-            {
-            case BencodeType::Integer:
-                std::cout << "int: " << val.asInt() << " ";
-                break;
-            case BencodeType::String:
-                std::cout << "string: " << val.asString().c_str() << " ";
-                break;
-            default:
-                std::cout << std::endl;
-                printValue(val, indent + 4);
-            }
-        }
-
-        for (int i = 0; i < indent; ++i)
-        {
-            std::cout << ' ';
-        }
-
-        std::cout << "}" << std::endl;
-        break;
-    }
+        const FileEntry &entry = files[i];
+        std::cout << "  - " << entry.path.c_str() << " (" << entry.size << " bytes)\n";
     }
 }
 
-void testMyVector()
+int main(int argc, char **argv)
 {
-    std::cout << "Running MyVector tests...\n";
-
-    // Test default constructor
-    MyVector<int> vec;
-    if (vec.getSize() != 0)
+    if (argc != 2)
     {
-        std::cerr << "Test failed: Default constructor should produce size 0.\n";
+        std::cout << "Usage: " << argv[0] << " <path to .torrent file>" << std::endl;
+
+        return 1;
     }
-
-    // Test push_back
-    for (int i = 0; i < 10; ++i)
-    {
-        vec.push_back(i * 2);
-    }
-
-    if (vec.getSize() != 10)
-    {
-        std::cerr << "Test failed: push_back did not increase size correctly.\n";
-    }
-
-    // Test operator[]
-    for (int i = 0; i < 10; ++i)
-    {
-        if (vec[i] != i * 2)
-        {
-            std::cerr << "Test failed: operator[] returned incorrect value.\n";
-        }
-    }
-
-    // Test copy constructor
-    MyVector<int> copied(vec);
-    if (copied.getSize() != vec.getSize())
-    {
-        std::cerr << "Test failed: copy constructor size mismatch.\n";
-    }
-    for (int i = 0; i < copied.getSize(); ++i)
-    {
-        if (copied[i] != vec[i])
-        {
-            std::cerr << "Test failed: copy constructor data mismatch.\n";
-        }
-    }
-
-    // Test assignment operator
-    MyVector<int> assigned;
-    assigned = vec;
-    if (assigned.getSize() != vec.getSize())
-    {
-        std::cerr << "Test failed: assignment operator size mismatch.\n";
-    }
-
-    // Test move constructor
-    MyVector<int> moved(std::move(assigned));
-    if (moved.getSize() != 10)
-    {
-        std::cerr << "Test failed: move constructor failed.\n";
-    }
-
-    std::cout << "All MyVector tests passed.\n";
-}
-
-int main()
-{
-    testMyVector();
-
-    MyString data = "d4:spam4:eggse";
-    // Expected Bencode dict: {"spam": "eggs"}
 
     try
     {
-        BencodeParser parser(data);
-
-        BencodeValue result = parser.parse();
-
-        printValue(result);
+        TorrentFile torrent(argv[1]);
+        printTorrentInfo(torrent);
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Parsing failed: " << e.what() << std::endl;
+        std::cerr << "Torrent Parsing failed: " << e.what() << '\n';
     }
 
     return 0;
