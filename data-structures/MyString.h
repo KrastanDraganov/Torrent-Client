@@ -1,3 +1,6 @@
+// Implementation mainly from OOP course
+// Source: https://github.com/plamena-ilieva/Object-oriented-programming-24-25/tree/5acb12e9fc778e10ed3d460f60a96fe8eb7c0690/Practicum/pract_13/StringVector/MyString
+
 #pragma once
 
 #include <iostream>
