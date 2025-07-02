@@ -1,5 +1,4 @@
-// From OOP course repo
-// TO DO - revise what is needed
+// From OOP course repo with some tweaks
 
 #include <cstring>
 #include <algorithm>
@@ -135,7 +134,7 @@ MyString &MyString::operator+=(char character)
     data[size] = character;
 
     ++size;
-    data[size] = '\n';
+    data[size] = '\0';
 
     return *this;
 }
