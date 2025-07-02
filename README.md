@@ -1,66 +1,113 @@
-# Torrent-Client
+# Torrent-Client (MVP - Torrent File Parser)
 
-MVP for a **Torrent File Parser**, written in C++ without any external libraries. This project lays the foundation for a full-featured torrent client by focusing first on interpreting `.torrent` metadata files using a custom-built data structure and parsing system.
+🎯 **Project Goal:**
 
-## 🚀 Project Goal
-
-The primary objective is to build a **custom Bencode parser** and use it to extract key information from `.torrent` files. These include:
-
-- Announce URL
-- File names and sizes
-- Total file size
-- Piece size and hashes
-
-This parser is the **core foundation** of any BitTorrent client.
+This project is a Minimal Viable Product (MVP) that **reads, parses, and extracts data from `.torrent` files**. It does not use any external libraries and includes custom implementations of common data structures. The project can be extended in the future to become a fully-featured BitTorrent client.
 
 ---
 
-## 🧠 How It Works
+## 🧠 How it works
 
-1. **Reading `.torrent` files** into a custom `MyString` class (no `std::string`).
-2. **Parsing Bencode** format using recursive descent (numbers, strings, lists, dictionaries).
-3. **Constructing `TorrentFile`** objects from parsed metadata.
+`.torrent` files use a format called **Bencode**, which is a simple textual serialization method. This project includes:
 
-The implementation does not rely on STL containers. Instead, we use:
-
-- `MyVector<T>` — a dynamic array
-- `MyUnorderedMap<K, V>` — a custom hash map
-- `MyString` — a string class wrapping raw char buffers
+- A **Bencode parser** that reads raw bytes and produces a structured tree of `BencodeValue` objects.
+- A **TorrentFile** class that interprets the structure of the parsed Bencode data.
+- A **TorrentFileBuilder** that builds `TorrentFile` objects step-by-step.
+- A **TorrentFileFactory** that offers a simple interface for creating `TorrentFile` objects from file or bytes.
 
 ---
 
-## 🗂️ File Structure
+## 🧱 Project Structure
 
 ```
 Torrent-Client/
+│
 ├── core/
-│ └── TorrentFile.{h,cpp} # Logic for interpreting parsed torrent metadata
+│   ├── TorrentFile.h / .cpp
+│   ├── TorrentFileBuilder.h / .cpp
+│   └── TorrentFileFactory.h / .cpp
+│
 ├── parser/
-│ ├── BencodeParser.{h,cpp} # Recursive Bencode parser
-│ ├── BencodeValue.{h,cpp} # Value container for parsed Bencode data
+│   ├── BencodeValue.h / .cpp
+│   └── BencodeParser.h / .cpp
+│
 ├── data-structures/
-│ ├── MyVector.hpp # Custom dynamic array implementation
-│ ├── MyUnorderedMap.hpp # Custom hash map implementation
-│ └── MyString.{h,cpp} # Custom string class
+│   ├── MyString.h / .cpp
+│   ├── MyVector.hpp
+│   └── MyUnorderedMap.hpp
+│
 ├── tests/
-│ ├── TestBencode.cpp # Tests for Bencode parsing
-│ └── TestMyVector.cpp # Tests for MyVector
-├── main.cpp # Entry point (CLI + parsing test)
-├── Makefile # Build system
-└── README.md
+│   ├── TestMyVector.cpp
+│   └── TestBencode.cpp
+│
+├── main.cpp         # Entry point
+└── Makefile
 ```
 
 ---
 
-## 🧰 Design Patterns Used
+## 🧰 Design Patterns
 
-- **Builder Pattern**: The `TorrentFile` class splits the construction logic into multiple `parseX` methods (e.g. `parseRoot`, `parseInfo`, `parseSingleFile`, etc.), which resembles the _Builder_ design pattern.
-- **RAII**
+This project uses **object-oriented design patterns** to keep code modular and extensible:
+
+| Pattern     | Usage Location       | Purpose                                                   |
+| ----------- | -------------------- | --------------------------------------------------------- |
+| **Builder** | `TorrentFileBuilder` | Step-by-step construction of a `TorrentFile` from Bencode |
+| **Factory** | `TorrentFileFactory` | Centralized creation of `TorrentFile` instances           |
 
 ---
 
-## Running the project
+## 🚀 Usage
 
-- Main torrent parser - `main && ./torrent_test "path-to-torrent-file"`
-- Test for MyVector - `make run_TestMyVector`
-- Test for BencodeParser - `make run_TestBencode`
+### Compile:
+
+```bash
+make
+```
+
+### Run `.torrent` file parser:
+
+```bash
+./torrent_test path/to/file.torrent
+```
+
+### Run tests:
+
+```bash
+make run_TestMyVector
+make run_TestBencode
+```
+
+---
+
+## 🛠️ Future Improvements
+
+- Implement Piece / Block / Peer logic
+- Tracker and DHT support
+- File downloading
+- User GUI
+
+---
+
+## 📜 Example
+
+A sample `.torrent` file (in Bencode):
+
+```bencode
+d
+  4:info
+    d
+      4:name 5:hello
+      6:length i12345e
+    e
+  8:announce 14:http://tracker
+e
+```
+
+Will be interpreted as:
+
+- Name: `hello`
+- Size: 12345 bytes
+- Tracker: `http://tracker`
+
+---
