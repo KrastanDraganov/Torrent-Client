@@ -48,8 +48,6 @@ Torrent-Client/
 
 ## 🧰 Design Patterns
 
-This project uses **object-oriented design patterns** to keep code modular and extensible:
-
 | Pattern     | Usage Location       | Purpose                                                   |
 | ----------- | -------------------- | --------------------------------------------------------- |
 | **Builder** | `TorrentFileBuilder` | Step-by-step construction of a `TorrentFile` from Bencode |
