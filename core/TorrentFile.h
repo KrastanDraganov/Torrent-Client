@@ -2,9 +2,7 @@
 
 #include "../data-structures/MyString.h"
 #include "../data-structures/MyVector.hpp"
-
 #include "../parser/BencodeValue.h"
-#include "../parser/BencodeParser.h"
 
 struct FileEntry
 {
@@ -15,7 +13,7 @@ struct FileEntry
 class TorrentFile
 {
 public:
-    TorrentFile(const MyString &filePath);
+    TorrentFile() = default;
 
     int getPieceLength() const;
     long long getTotalSize() const;
@@ -26,21 +24,22 @@ public:
     const MyVector<FileEntry> &getFiles() const;
     const MyVector<MyString> &getPieces() const;
 
+    void setPieceLength(int pieceLength);
+    void setTotalSize(long long totalSize);
+
+    void setAnnounce(const MyString &announce);
+    void setName(const MyString &name);
+
+    void setFiles(const MyVector<FileEntry> &files);
+    void setPieces(const MyVector<MyString> &pieces);
+
 private:
-    int pieceLength;
-    long long totalSize;
+    int pieceLength = 0;
+    long long totalSize = 0;
 
     MyString announce;
     MyString name;
 
     MyVector<FileEntry> files;
     MyVector<MyString> pieces;
-
-    void parseRoot(const BencodeValue &root);
-    void parseInfo(const BencodeValue &infoDict);
-    void parseSingleFile(const MyUnorderedMap<MyString, BencodeValue> &infoDict);
-    void parseMultiFile(const MyUnorderedMap<MyString, BencodeValue> &infoDict);
-    void splitPieces(const MyString &piecesRaw);
-
-    MyString readFileContent(const MyString &filePath) const;
 };

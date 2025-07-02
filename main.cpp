@@ -1,4 +1,5 @@
 #include "core/TorrentFile.h"
+#include "core/TorrentFileFactory.h"
 
 #include <iostream>
 
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
 
     try
     {
-        TorrentFile torrent(argv[1]);
+        TorrentFile torrent = TorrentFileFactory::createFromFile(argv[1]);
         printTorrentInfo(torrent);
     }
     catch (const std::exception &e)
