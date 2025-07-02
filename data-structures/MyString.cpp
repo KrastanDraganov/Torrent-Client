@@ -5,8 +5,6 @@
 
 #include "MyString.h"
 
-#pragma warning(disable : 4996)
-
 static unsigned roundToPowerOfTwo(unsigned number)
 {
     --number;
