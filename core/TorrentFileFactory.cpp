@@ -17,7 +17,7 @@ TorrentFile TorrentFileFactory::createFromFile(const MyString &filePath)
     size_t length = in.tellg();
     in.seekg(0, std::ios::beg);
 
-    MyVector<unsigned char> buffer(length);
+    MyVector<char> buffer(length);
     for (size_t i = 0; i < length; ++i)
     {
         char currentCharacter;
@@ -28,13 +28,13 @@ TorrentFile TorrentFileFactory::createFromFile(const MyString &filePath)
             break;
         }
 
-        buffer[i] = currentCharacter;
+        buffer.push_back(currentCharacter);
     }
 
     MyString content(length);
     for (size_t i = 0; i < length; ++i)
     {
-        content[i] = buffer[i];
+        content += buffer[i];
     }
 
     return createFromBytes(content);

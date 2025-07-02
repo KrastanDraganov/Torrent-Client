@@ -52,7 +52,6 @@ MyVector<T>::MyVector(size_t initialCapacity)
     : size(0), capacity(initialCapacity)
 {
     data = new T[capacity]();
-    size = capacity;
 }
 
 template <typename T>
@@ -148,9 +147,14 @@ bool MyVector<T>::isEmpty() const
 template <typename T>
 T &MyVector<T>::operator[](size_t index)
 {
-    if (index >= size)
+    if (index >= capacity)
     {
         throw std::out_of_range("Index out of bounds in MyVector");
+    }
+
+    if (index > size)
+    {
+        size = index + 1;
     }
 
     return data[index];

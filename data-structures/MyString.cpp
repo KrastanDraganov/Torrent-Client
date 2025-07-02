@@ -127,7 +127,7 @@ MyString &MyString::operator+=(const MyString &other)
 
 MyString &MyString::operator+=(char character)
 {
-    if (getSize() + +1 > allocatedDataSize)
+    if (getSize() + 1 > allocatedDataSize)
     {
         resize(dataToAllocByStringLen(getSize() + 1));
     }
