@@ -21,11 +21,6 @@ public:
     BencodeValue(const MyVector<BencodeValue> &list);
     BencodeValue(const MyUnorderedMap<MyString, BencodeValue> &dict);
 
-    BencodeValue(const BencodeValue &other);
-    BencodeValue(BencodeValue &&other) noexcept;
-    BencodeValue &operator=(const BencodeValue &other);
-    BencodeValue &operator=(BencodeValue &&other) noexcept;
-
     BencodeType getType() const;
 
     int asInt() const;
@@ -40,7 +35,4 @@ private:
     MyString stringValue;
     MyVector<BencodeValue> listValue;
     MyUnorderedMap<MyString, BencodeValue> dictValue;
-
-    void copyFrom(const BencodeValue &other);
-    void moveFrom(BencodeValue &&other);
 };

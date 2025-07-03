@@ -31,36 +31,6 @@ BencodeValue::BencodeValue(const MyUnorderedMap<MyString, BencodeValue> &dict)
     dictValue = dict;
 }
 
-BencodeValue::BencodeValue(const BencodeValue &other)
-{
-    copyFrom(other);
-}
-
-BencodeValue::BencodeValue(BencodeValue &&other) noexcept
-{
-    moveFrom(std::move(other));
-}
-
-BencodeValue &BencodeValue::operator=(const BencodeValue &other)
-{
-    if (this != &other)
-    {
-        copyFrom(other);
-    }
-
-    return *this;
-}
-
-BencodeValue &BencodeValue::operator=(BencodeValue &&other) noexcept
-{
-    if (this != &other)
-    {
-        moveFrom(std::move(other));
-    }
-
-    return *this;
-}
-
 BencodeType BencodeValue::getType() const
 {
     return type;
@@ -104,62 +74,4 @@ const MyUnorderedMap<MyString, BencodeValue> &BencodeValue::asDict() const
     }
 
     return dictValue;
-}
-
-void BencodeValue::copyFrom(const BencodeValue &other)
-{
-    type = other.type;
-
-    switch (type)
-    {
-    case BencodeType::Integer:
-    {
-        intValue = other.intValue;
-        break;
-    }
-    case BencodeType::String:
-    {
-        stringValue = other.stringValue;
-        break;
-    }
-    case BencodeType::List:
-    {
-        listValue = other.listValue;
-        break;
-    }
-    case BencodeType::Dictionary:
-    {
-        dictValue = other.dictValue;
-        break;
-    }
-    }
-}
-
-void BencodeValue::moveFrom(BencodeValue &&other)
-{
-    type = other.type;
-
-    switch (type)
-    {
-    case BencodeType::Integer:
-    {
-        intValue = other.intValue;
-        break;
-    }
-    case BencodeType::String:
-    {
-        stringValue = std::move(other.stringValue);
-        break;
-    }
-    case BencodeType::List:
-    {
-        listValue = std::move(other.listValue);
-        break;
-    }
-    case BencodeType::Dictionary:
-    {
-        dictValue = std::move(other.dictValue);
-        break;
-    }
-    }
 }
